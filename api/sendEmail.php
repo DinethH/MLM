@@ -16,13 +16,15 @@
     
     
     $mail = new SimpleMail();
-    $mail->setTo($emailAddress, $emailAddress)
+    $mail->setTo($emailAddress, $name)
          ->setSubject($ref)
-         ->setFrom('mlm001@mlm-dinethh.c9users.io', 'mlm001')
-         ->addMailHeader('Reply-To', 'mlm001@mlm-dinethh.c9users.io', 'mlm001')
+         ->setFrom("$ref@atimetravelers.com", $ref)
+         ->addMailHeader('Reply-To', 'mlm@sachintha.com', $ref)
          ->addMailHeader('Bcc', 'dineth@sachintha.com', 'dineth@sachintha.com')
          ->addGenericHeader('X-Mailer', 'PHP/' . phpversion())
          ->addGenericHeader('Content-Type', 'text/html; charset="utf-8"')
          ->setMessage($message)
          ->setWrap(78);
     $send = $mail->send();
+    
+    echo $send;

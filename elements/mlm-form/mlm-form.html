@@ -1,13 +1,13 @@
-<link rel="import" href="/bower_components/polymer/polymer.html">
-<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html"
-<link rel="import" href="/bower_components/paper-input/paper-input.html">
-<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
-<link rel="import" href="/bower_components/paper-item/paper-item.html">
-<link rel="import" href="/bower_components/paper-input/paper-textarea.html">
-<link rel="import" href="/bower_components/paper-button/paper-button.html">
-<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
-
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/classes/iron-flex-layout.html"
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 
 
 <dom-module id="mlm-form">
@@ -53,11 +53,12 @@
     </div>
     
     <iron-ajax id="sendEmail"
-    auto="false"
-    url="/api/sendEmail.php?ref=mlm001&name={{name}}&email={{email}}&phone={{phone}}&zipcode={{zipcode}}&amount={{amount}}&start={{start}}&type={{type}}&interest={{interest}}"
+    url="api/sendEmail.php?ref=mlm001&name={{name}}&email={{email}}&phone={{phone}}&zipcode={{zipcode}}&amount={{amount}}&start={{start}}&type={{type}}&interest={{interest}}"
     handle-as="json"
     on-response="handleResponse"
     debounce-duration="300"></iron-ajax>
+    
+    <paper-toast id="successToast" text="Your message is sent!"></paper-toast>
 
   </template>
   <script>
@@ -85,7 +86,14 @@
               && this.$.networkTypes.validate()
               && this.$.interests.validate()
           ) {
-              this.$.sendEmail.go();
+              this.$.sendEmail.generateRequest();
+              this.name = "";
+              this.email = "";
+              this.phone = "";
+              this.zipcode = "";
+              this.networkTypes = "";
+              this.interests = "";
+              this.$.successToast.open();
           }
       }
     });

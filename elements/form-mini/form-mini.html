@@ -1,13 +1,13 @@
-<link rel="import" href="/bower_components/polymer/polymer.html">
-<link rel="import" href="/bower_components/iron-flex-layout/classes/iron-flex-layout.html"
-<link rel="import" href="/bower_components/paper-input/paper-input.html">
-<link rel="import" href="/bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
-<link rel="import" href="/bower_components/paper-menu/paper-menu.html">
-<link rel="import" href="/bower_components/paper-item/paper-item.html">
-<link rel="import" href="/bower_components/paper-input/paper-textarea.html">
-<link rel="import" href="/bower_components/paper-button/paper-button.html">
-<link rel="import" href="/bower_components/iron-ajax/iron-ajax.html">
-
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-flex-layout/classes/iron-flex-layout.html"
+<link rel="import" href="../../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../../bower_components/paper-menu/paper-menu.html">
+<link rel="import" href="../../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../../bower_components/paper-input/paper-textarea.html">
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 
 
 <dom-module id="form-mini">
@@ -35,11 +35,12 @@
     </div>
     
     <iron-ajax id="sendEmail"
-    auto="false"
-    url="/api/sendEmail.php?ref=mlm003&name={{name}}&email={{email}}"
+    url="api/sendEmail.php?ref=mlm003&name={{name}}&email={{email}}"
     handle-as="json"
     on-response="handleResponse"
     debounce-duration="300"></iron-ajax>
+    
+    <paper-toast id="successToast" text="Your message is sent!"></paper-toast>
 
   </template>
   <script>
@@ -53,7 +54,8 @@
         foo: {
           type: String,
           value: 'form-mini',
-          notify: true
+          notify: true,
+          observer: 'responseChanged'
         }
       },
       validateForm: function () {
@@ -61,8 +63,13 @@
               this.$.name.validate()
               && this.$.email.validate()
           ) {
-              this.$.sendEmail.go();
+              
+              this.$.sendEmail.generateRequest();
+              this.name = "";
+              this.email = "";
+              this.$.successToast.open();
           }
+
       }
     });
   })();
