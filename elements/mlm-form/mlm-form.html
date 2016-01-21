@@ -17,6 +17,9 @@
         display: block;
         padding: 10px;
       }
+      .light {
+        color: white;
+      }
     </style>
     
     <div><paper-input id="name" label="Name" autoValidate required type="text" value="{{name}}"></paper-input></div>
@@ -69,6 +72,7 @@
       is: 'mlm-form',
 
       properties: {
+        theme: String,
         foo: {
           type: String,
           value: 'mlm-form',
