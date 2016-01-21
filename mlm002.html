@@ -11,12 +11,22 @@
 
     <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
-    <link rel="import" href="elements/mlm-form/mlm-form.html">
     <link rel="import" href="bower_components/paper-card/paper-card.html">
     <link rel="import" href="bower_components/iron-flex-layout/classes/iron-flex-layout.html">
 
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:900">
     <link href='https://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+    
+    <link rel="import" href="bower_components/polymer/polymer.html">
+    <link rel="import" href="bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+    <link rel="import" href="bower_components/paper-input/paper-input.html">
+    <link rel="import" href="bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+    <link rel="import" href="bower_components/paper-menu/paper-menu.html">
+    <link rel="import" href="bower_components/paper-item/paper-item.html">
+    <link rel="import" href="bower_components/paper-input/paper-textarea.html">
+    <link rel="import" href="bower_components/paper-button/paper-button.html">
+    <link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
+    <link rel="import" href="bower_components/paper-toast/paper-toast.html">
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
@@ -193,6 +203,101 @@
             <div style="float: right; width: 480px;">
                 <div id="sticky-anchor"></div>
                 <div id="sticky">
+<dom-module id="mlm-form">
+  <template>
+    <style>
+      :host {
+        display: block;
+        padding: 10px;
+      }
+      .light {
+        color: white;
+      }
+    </style>
+    
+    <div><paper-input id="name" label="Name" autoValidate required type="text" value="{{name}}"></paper-input></div>
+    <div><paper-input id="email" label="Email" autoValidate errorMessage="Invalid email address!" required type="email" value="{{email}}"></paper-input></div>
+    <div><paper-input id="phone" label="Phone Number" autoValidate type="phone" required value="{{phone}}"></paper-input></div>
+    <div><paper-input id="zipcode" label="Zip Code" autoValidate required value="{{zipcode}}"></paper-input></div>
+    <div>
+        <paper-dropdown-menu id="amount" required label="Amount interested in investing">
+          <paper-menu class="dropdown-content" selected="{{amount}}">
+            <paper-item>0-$500</paper-item>
+            <paper-item>$500-$1500</paper-item>
+            <paper-item>$1500-$2500</paper-item>
+            <paper-item>$2500 and above</paper-item>
+          </paper-menu>
+        </paper-dropdown-menu>
+    </div>
+    
+    <div>
+        <paper-dropdown-menu id="toStart" required label="When they want to get started" >
+            <paper-menu class="dropdown-content" selected="{{toStart}}">
+                <paper-item>0-3 months</paper-item>
+                <paper-item>3-6 months</paper-item>
+                <paper-item>6 months-1 year</paper-item>
+            </paper-menu>
+        </paper-dropdown-menu>
+    </div>
+    
+    <div><paper-textarea id="networkTypes" rows="5" label="What type of Network Marketing are they interested in?" required value="{{networkTypes}}"></paper-textarea></div>
+    
+    <div><paper-textarea id="interests" rows="5" label="Why are they interested in Network Marketing?" required value="{{interests}}"></paper-textarea></div>
+    
+    <div class="layout horizontal end-justified">
+        <div><paper-button on-click="validateForm">Submit</paper-button></div>
+    </div>
+    
+    <iron-ajax id="sendEmail"
+    url="api/sendEmail.php?ref=mlm002&name={{name}}&email={{email}}&phone={{phone}}&zipcode={{zipcode}}&amount={{amount}}&start={{start}}&type={{type}}&interest={{interest}}"
+    handle-as="json"
+    on-response="handleResponse"
+    debounce-duration="300"></iron-ajax>
+    
+    <paper-toast id="successToast" text="Your message is sent!"></paper-toast>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'mlm-form',
+
+      properties: {
+        theme: String,
+        foo: {
+          type: String,
+          value: 'mlm-form',
+          notify: true
+        }
+      },
+      validateForm: function () {
+          if (
+              this.$.name.validate()
+              && this.$.email.validate()
+              && this.$.phone.validate()
+              && this.$.zipcode.validate()
+              && this.$.amount.validate()
+              && this.$.toStart.validate()
+              && this.$.networkTypes.validate()
+              && this.$.interests.validate()
+          ) {
+              this.$.sendEmail.generateRequest();
+              this.name = "";
+              this.email = "";
+              this.phone = "";
+              this.zipcode = "";
+              this.networkTypes = "";
+              this.interests = "";
+              this.$.successToast.open();
+          }
+      }
+    });
+  })();
+  </script>
+</dom-module>
+
                     <mlm-form style="width: 480px; background-color: rgba(26,51,0,0.3); padding: 10px;"></mlm-form>
                     
                 </div>

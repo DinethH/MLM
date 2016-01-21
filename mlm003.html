@@ -11,12 +11,22 @@
 
     <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
 
-    <link rel="import" href="elements/form-mini/form-mini.html">
     <link rel="import" href="bower_components/paper-card/paper-card.html">
     <link rel="import" href="bower_components/iron-flex-layout/classes/iron-flex-layout.html">
 
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:900">
     <link href='https://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
+    
+    <link rel="import" href="bower_components/polymer/polymer.html">
+    <link rel="import" href="bower_components/iron-flex-layout/classes/iron-flex-layout.html">
+    <link rel="import" href="bower_components/paper-input/paper-input.html">
+    <link rel="import" href="bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+    <link rel="import" href="bower_components/paper-menu/paper-menu.html">
+    <link rel="import" href="bower_components/paper-item/paper-item.html">
+    <link rel="import" href="bower_components/paper-input/paper-textarea.html">
+    <link rel="import" href="bower_components/paper-button/paper-button.html">
+    <link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
+    <link rel="import" href="bower_components/paper-toast/paper-toast.html">
 
     <style type="text/css">
     body {
@@ -201,6 +211,73 @@ hr {
             Designed by <a href="http://www.itsdineth.com">Dineth</a> 
         </div>
     </div> 
+    
+<dom-module id="form-mini">
+  <template>
+    <style>
+      :host {
+        display: block;
+        padding: 10px;
+      }
+      h3 {
+        margin: 0;
+        padding: 10px;
+        color: white;
+        background: orange;
+      }
+    </style>
+    
+    <h3>Ask us for more info!</h3>
+    
+    <div><paper-input id="name" label="Name" autoValidate required type="text" value="{{name}}"></paper-input></div>
+    <div><paper-input id="email" label="Email" autoValidate errorMessage="Invalid email address!" required type="email" value="{{email}}"></paper-input></div>
+   
+    <div class="layout horizontal end-justified">
+        <div><paper-button on-click="validateForm">Submit</paper-button></div>
+    </div>
+    
+    <iron-ajax id="sendEmail"
+    url="api/sendEmail.php?ref=mlm003&name={{name}}&email={{email}}"
+    handle-as="json"
+    on-response="handleResponse"
+    debounce-duration="300"></iron-ajax>
+    
+    <paper-toast id="successToast" text="Your message is sent!"></paper-toast>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'form-mini',
+
+      properties: {
+        foo: {
+          type: String,
+          value: 'form-mini',
+          notify: true,
+          observer: 'responseChanged'
+        }
+      },
+      validateForm: function () {
+          if (
+              this.$.name.validate()
+              && this.$.email.validate()
+          ) {
+              
+              this.$.sendEmail.generateRequest();
+              this.name = "";
+              this.email = "";
+              this.$.successToast.open();
+          }
+
+      }
+    });
+  })();
+  </script>
+</dom-module>
+
     
     <form-mini></form-mini>
   </div>
